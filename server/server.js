@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const user = require("../models/models");
+const {blog,user} = require("../models/models");
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -16,39 +16,28 @@ mongoose
 	.then((result) => console.log("connected to db"))
 	.catch((err) => console.log(err));
 
-let users = [
-	{
-		author: "Hunterx",
-		blogs: [
-			{
-				title: "whatever",
-				body: "this is the body",
-			},
-		],
-	},
-	{
-		author: "Rogue",
-		blogs: [
-			{
-				title: "whatever2",
-				body: "this is the other body",
-			},
-		],
-	},
-];
+app.post("/createBlog", (req, res) => {
+	// console.log(req.body);
+	const author=req.body.author;
+	const title=req.body.title;
+	const newBlog = new blog(req.body);
+	newBlog
+		.save()
+		.then((result) => res.json({ mssg: "saved successfully" }))
+		.catch((err) => console.log(err));
+	
+});
 
-// const user1 = new user(users[1]);
+app.get("/allBlogs", (req, res) => {
+	blog
+		.find()
+		.then((result) => res.json(result))
+		.catch((err) => console.log(err));
+	
+});
 
-// user1
-// 	.save()
-// 	.then((result) => console.log("saved successfully"))
-// 	.catch((err) => console.log(err));
+app.put('/editblog', (req,res)=>{
 
-// user
-// 	.find({ author: "Hunterx" })
-// 	.then((result) => console.log(result))
-// 	.catch((err) => console.log(err));
+})
 
-app.get("/allblogs", (req, res) => res.json(users));
-
-const hunterx = app.listen(5000, () => console.log("listening on port 5000"));
+app.listen(5000, () => console.log("listening on port 5000"));

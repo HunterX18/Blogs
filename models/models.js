@@ -5,12 +5,18 @@ const userSchema = new mongoose.Schema({
 	blogs: [
 		{
 			title: String,
-			body: String,
 		},
 	],
 });
 
+const blogSchema = new mongoose.Schema({
+	author: String,
+	title: String,
+	body: String,
+});
+
+const blog = mongoose.model("blog", blogSchema);
+
 const user = mongoose.model("user", userSchema);
 
-module.exports = user;
-
+module.exports = { user, blog };
