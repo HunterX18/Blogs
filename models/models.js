@@ -1,18 +1,15 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-	author: String,
-	blogs: [
-		{
-			title: String,
-		},
-	],
+	username: String,
+	password: String,
 });
 
 const blogSchema = new mongoose.Schema({
 	author: String,
 	title: String,
 	body: String,
+	authorid: String,
 });
 
 const blog = mongoose.model("blog", blogSchema);

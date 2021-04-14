@@ -1,19 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { Link, Redirect } from "react-router-dom";
 const Home = () => {
 	const [blogs, setBlogs] = useState([]);
 	const [loading, setLoading] = useState(false);
+	const token = localStorage.getItem("usertoken");
+	
+	const [error, setError] = useState(false);
+
+
 	useEffect(() => {
 		setLoading(true);
-		fetch("/allBlogs")
+		fetch("/allBlogs", {
+			method: "post",
+			headers: {
+				Authorization: "Bearer " + token,
+			},
+		})
 			.then((res) => res.json())
 			.then((result) => {
-				console.log(result);
+				// console.log(result);
+				if (result.error) setError(true);
 				setBlogs(result);
 				setLoading(false);
 			})
 			.catch((err) => console.log(err));
 	}, []);
 
+	if (error) return <Redirect to="/Signup" />;
 	return (
 		<>
 			<h1>This is the Home Page!</h1>
@@ -23,10 +36,11 @@ const Home = () => {
 				blogs.map((blog, ind) => {
 					return (
 						<>
-							<h1 key={ind}>
-								Author {ind + 1}: {blog.author}
-							</h1>
-							{/* <h2>No. of blogs: {blog.blogs.length}</h2> */}
+							<Link to={`/Eachblog/${blog._id}`}>
+								<h1 key={ind}>
+									Blog {ind + 1}: {blog.title}
+								</h1>
+							</Link>
 						</>
 					);
 				})
