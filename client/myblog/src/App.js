@@ -7,36 +7,38 @@ import EachBLog from "./pages/EachBlog";
 import Edit from "./pages/Edit";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
+import { UserProvider } from "./UserContext";
 
 function App() {
-
 	return (
-		<Router>
-			<Navbar />
-			<Switch>
-				<Route exact path="/">
-					<Home />
-				</Route>
-				<Route exact path="/create">
-					<Create />
-				</Route>
-				<Route exact path="/myblogs">
-					<Myblogs />
-				</Route>
-				<Route exact path="/Eachblog/:id">
-					<EachBLog />
-				</Route>
-				<Route exact path="/Edit/:id">
-					<Edit />
-				</Route>
-				<Route exact path="/Signup">
-					<Signup />
-				</Route>
-				<Route exact path="/Signin">
-					<Signin />
-				</Route>
-			</Switch>
-		</Router>
+		<UserProvider>
+			<Router>
+				<Navbar />
+				<Switch>
+					<Route exact path="/">
+						<Home />
+					</Route>
+					<Route exact path="/create">
+						<Create />
+					</Route>
+					<Route exact path="/myblogs">
+						<Myblogs />
+					</Route>
+					<Route exact path="/Eachblog/:id">
+						<EachBLog />
+					</Route>
+					<Route exact path="/Edit/:id">
+						<Edit />
+					</Route>
+					<Route exact path="/Signup">
+						<Signup />
+					</Route>
+					<Route exact path="/Signin">
+						<Signin />
+					</Route>
+				</Switch>
+			</Router>
+		</UserProvider>
 	);
 }
 
