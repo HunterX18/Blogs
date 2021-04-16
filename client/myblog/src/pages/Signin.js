@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, Redirect } from "react-router-dom";
+import { UserContext } from "../UserContext";
 
 const Signin = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [signedin, setSignedin] = useState(false);
 	const [incorrectPassword, setIncorrectPassword] = useState(false);
+	const [state, dispatch] = useContext(UserContext);
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		fetch("/signin", {
@@ -20,10 +22,10 @@ const Signin = () => {
 		})
 			.then((res) => res.json())
 			.then((result) => {
-				// console.log(result);
 				if (result.mssg == "incorrect password") setIncorrectPassword(true);
 				else {
 					localStorage.setItem("usertoken", result.token);
+					dispatch(localStorage.getItem("usertoken"));
 					localStorage.setItem("username", result.username);
 					localStorage.setItem("userid", result.id);
 					setSignedin(true);
