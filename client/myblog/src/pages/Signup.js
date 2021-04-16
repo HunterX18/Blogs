@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
+import { UserContext } from "../UserContext";
 
 const Signup = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [signedin, setSignedin] = useState(false);
-	
+	const [state, setState] = useContext(UserContext);
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		// console.log(username, password);
 		fetch("/signup", {
 			method: "post",
 			headers: {
@@ -20,13 +22,11 @@ const Signup = () => {
 		})
 			.then((res) => res.json())
 			.then((result) => {
-				// console.log(result);
-				
-					localStorage.setItem("usertoken", result.token);
-					localStorage.setItem("userid", result.id);
-					localStorage.setItem("username", result.username);
-					setSignedin(true);
-				
+				localStorage.setItem("usertoken", result.token);
+				setState(localStorage.getItem("usertoken"));
+				localStorage.setItem("userid", result.id);
+				localStorage.setItem("username", result.username);
+				setSignedin(true);
 			})
 			.catch((err) => console.log(err));
 	};
@@ -52,7 +52,6 @@ const Signup = () => {
 				/>
 				<button type="submit">Submit</button>
 			</form>
-			
 		</>
 	);
 };
