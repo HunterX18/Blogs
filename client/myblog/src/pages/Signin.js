@@ -7,7 +7,7 @@ const Signin = () => {
 	const [password, setPassword] = useState("");
 	const [signedin, setSignedin] = useState(false);
 	const [incorrectPassword, setIncorrectPassword] = useState(false);
-	const [state, dispatch] = useContext(UserContext);
+	const [state, setState] = useContext(UserContext);
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		fetch("/signin", {
@@ -24,9 +24,9 @@ const Signin = () => {
 			.then((result) => {
 				if (result.mssg == "incorrect password") setIncorrectPassword(true);
 				else {
-					localStorage.setItem("usertoken", result.token);
-					dispatch(localStorage.getItem("usertoken"));
 					localStorage.setItem("username", result.username);
+					setState(localStorage.getItem("username"));
+					localStorage.setItem("usertoken", result.token);
 					localStorage.setItem("userid", result.id);
 					setSignedin(true);
 					setIncorrectPassword(false);
