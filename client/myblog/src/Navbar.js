@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 const Navbar = () => {
 	const [state, setState] = useContext(UserContext);
-
-	useEffect(()=>{},[state])
+	console.log(state);
+	useEffect(() => {}, [state]);
 
 	const handleLogout = () => {
 		localStorage.removeItem("username");
@@ -24,6 +24,9 @@ const Navbar = () => {
 					</Link>
 					<Link to="/Signin">
 						<button onClick={handleLogout}>Logout</button>
+					</Link>
+					<Link to={`/Profile/${state}`}>
+						<button>My Profile</button>
 					</Link>
 				</>
 			)}
