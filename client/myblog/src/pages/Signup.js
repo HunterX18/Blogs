@@ -22,10 +22,10 @@ const Signup = () => {
 		})
 			.then((res) => res.json())
 			.then((result) => {
-				localStorage.setItem("usertoken", result.token);
-				setState(localStorage.getItem("usertoken"));
-				localStorage.setItem("userid", result.id);
 				localStorage.setItem("username", result.username);
+				setState(localStorage.getItem("username"));
+				localStorage.setItem("usertoken", result.token);
+				localStorage.setItem("userid", result.id);
 				setSignedin(true);
 			})
 			.catch((err) => console.log(err));
