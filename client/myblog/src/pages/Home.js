@@ -1,13 +1,10 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 const Home = () => {
 	const [blogs, setBlogs] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const token = localStorage.getItem("usertoken");
-	
 	const [error, setError] = useState(false);
-
-
 	useEffect(() => {
 		setLoading(true);
 		fetch("/allBlogs", {
@@ -18,7 +15,6 @@ const Home = () => {
 		})
 			.then((res) => res.json())
 			.then((result) => {
-				// console.log(result);
 				if (result.error) setError(true);
 				setBlogs(result);
 				setLoading(false);
