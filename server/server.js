@@ -124,4 +124,34 @@ app.post("/signin", (req, res) => {
 		.catch((err) => res.json(err));
 });
 
+app.get("/profile/:author", (req, res) => {
+	const author = req.params.author;
+	blog
+		.find({ author })
+		.then((result) => res.json(result))
+		.catch((err) => res.json({ err }));
+});
+
+app.post("/follow", (req, res) => {
+	const own = req.body.follower;
+	const who = req.body.following;
+	user
+		.findOneAndUpdate(
+			{ username: own },
+			{ $push: { following: who } },
+			{ new: true }
+		)
+		.then((result) => res.json(result))
+		.catch((err) => res.json(err));
+
+	user
+		.findOneAndUpdate(
+			{ username: who },
+			{ $push: { followers: own } },
+			{ new: true }
+		)
+		.then((result) => res.json(result))
+		.catch((err) => res.json(err));
+});
+
 app.listen(5000, () => console.log("listening on port 5000"));
