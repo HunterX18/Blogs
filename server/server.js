@@ -27,9 +27,6 @@ const userAuth = (req, res, next) => {
 };
 
 app.post("/createBlog", userAuth, (req, res) => {
-	// const author = req.body.author;
-	// const title = req.body.title;
-	// console.log(req.body);
 	jwt.verify(req.token, "secretkey", (err, result) => {
 		if (err) res.json({ error: "not verified" });
 		else {
@@ -56,11 +53,9 @@ app.post("/allBlogs", userAuth, (req, res) => {
 
 app.put("/edit/:id", (req, res) => {
 	const id = req.params.id;
-	// console.log(typeof(id));
 	const author = req.body.author;
 	const title = req.body.title;
 	const body = req.body.body;
-	// console.log(author, title, body);
 	blog
 		.findOneAndUpdate({ _id: id }, { author, title, body }, { new: true })
 		.then((result) => res.json({ mssg: "Updated successfully" }))
@@ -69,7 +64,6 @@ app.put("/edit/:id", (req, res) => {
 
 app.get("/eachblog/:id", (req, res) => {
 	const id = req.params.id;
-	// res.json({"mssg":"found"})
 	blog
 		.findById(id)
 		.then((result) => res.json(result))
@@ -95,7 +89,6 @@ app.post("/signup", (req, res) => {
 					});
 				})
 				.catch((err) => console.log(err));
-			// res.json({ username, password, token });
 		}
 	});
 });
@@ -115,7 +108,12 @@ app.post("/signin", (req, res) => {
 					jwt.sign({ username, password }, "secretkey", (err, token) => {
 						if (err) res.json({ username, err });
 						else {
-							res.json({ username, token, id: result[0]._id });
+							res.json({
+								username,
+								token,
+								id: result[0]._id,
+								following: result[0].following,
+							});
 						}
 					});
 				} else res.json({ mssg: "incorrect password" });
@@ -141,16 +139,40 @@ app.post("/follow", (req, res) => {
 			{ $push: { following: who } },
 			{ new: true }
 		)
-		.then((result) => res.json(result))
+		.then((result) => {
+			const followingArray = result.following;
+			user
+				.findOneAndUpdate(
+					{ username: who },
+					{ $push: { followers: own } },
+					{ new: true }
+				)
+				.then((result) => res.json(followingArray))
+				.catch((err) => res.json(err));
+		})
 		.catch((err) => res.json(err));
-
+});
+app.post("/unfollow", (req, res) => {
+	const own = req.body.follower;
+	const who = req.body.following;
 	user
 		.findOneAndUpdate(
-			{ username: who },
-			{ $push: { followers: own } },
+			{ username: own },
+			{ $pull: { following: who } },
 			{ new: true }
 		)
-		.then((result) => res.json(result))
+		.then((result) => {
+			// res.json(result);
+			const followingArray = result.following;
+			user
+				.findOneAndUpdate(
+					{ username: who },
+					{ $pull: { followers: own } },
+					{ new: true }
+				)
+				.then((result) => res.json(followingArray))
+				.catch((err) => res.json(err));
+		})
 		.catch((err) => res.json(err));
 });
 

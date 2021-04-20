@@ -28,6 +28,7 @@ const Signin = () => {
 					setState(localStorage.getItem("username"));
 					localStorage.setItem("usertoken", result.token);
 					localStorage.setItem("userid", result.id);
+					localStorage.setItem("following", result.following.toString());
 					setSignedin(true);
 					setIncorrectPassword(false);
 				}
